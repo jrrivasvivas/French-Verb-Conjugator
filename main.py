@@ -1,8 +1,11 @@
-from verbs import Conjugator
+# En main.py
+from src.verbs import Conjugator  # Importar Conjugator desde verbs.py en la carpeta src
+from src.logger import ErrorLogger  # Importar ErrorLogger desde logger.py en la carpeta src
 
 class ConjugationGame:
     def __init__(self):
         self.conjugator = Conjugator()
+        self.logger = ErrorLogger("2023-11")  # Crear un objeto ErrorLogger para el mes actual
         self.score = {'correct': 0, 'incorrect': 0}
 
     def play_round(self):
@@ -21,6 +24,9 @@ class ConjugationGame:
         else:
             print(f"Incorrecto. La conjugación correcta es: {pronoun} {correct_conjugation}")
             self.score['incorrect'] += 1
+
+            # Registra el error en el archivo de log
+            self.logger.log_error(pronoun, verb, tense, user_verb, correct_conjugation, 'Incorrecto')
 
     def start_game(self):
         print("¡Bienvenido al juego de conjugación de verbos!")
