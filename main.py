@@ -21,15 +21,18 @@ class ConjugationGame:
         if user_verb == correct_conjugation and user_pronoun == pronoun:
             print("¡Correcto!")
             self.score['correct'] += 1
+            result = 'Correcto'
         else:
             print(f"Incorrecto. La conjugación correcta es: {pronoun} {correct_conjugation}")
             self.score['incorrect'] += 1
+            result = 'Incorrecto'
 
-            # Registra el error en el archivo de log
-            self.logger.log_error(pronoun, verb, tense, user_verb, correct_conjugation, 'Incorrecto')
+        # Registra la respuesta en el archivo de log
+        self.logger.log_error(pronoun, verb, tense, user_verb, correct_conjugation, result)
+
 
     def start_game(self):
-        print("¡Bienvenido al juego de conjugación de verbos!")
+        print("¡Bienvenido al juego de conju gación de verbos!")
         while True:
             self.play_round()
             print(f"Aciertos: {self.score['correct']} - Errores: {self.score['incorrect']}")
