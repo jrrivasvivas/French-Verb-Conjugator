@@ -1,0 +1,15 @@
+Fecha,Pronombre,Verbo,Tiempo Verbal,Conjugación Usuario,Conjugación Correcta,Resultado
+2023-11-03 22:02:03,il,vouloir,present,veux,veut,Incorrecto
+2023-11-03 22:02:23,tu,suivre,present,sais,suis,Incorrecto
+2023-11-03 22:10:41,je,courir,present,courte,cours,Incorrecto
+2023-11-03 22:42:18,tu,recevoir,present,recoit,reçois,Incorrecto
+2023-11-03 23:42:49,vous,croire,present,croison,croyez,Incorrecto
+2023-11-03 23:43:12,tu,lire,present,lit,lis,Incorrecto
+2023-11-04 00:39:40,tu,offrir,present,offre,offres,Incorrecto
+2023-11-04 00:39:55,il,connaitre,present,connaitre,connait,Incorrecto
+2023-11-04 00:40:04,nous,etre,present,avon,sommes,Incorrecto
+2023-11-04 00:40:15,je,croire,present,croir,crois,Incorrecto
+2023-11-04 00:41:12,je,decouvrir,present,decouvre,découvre,Incorrecto
+2023-11-04 11:07:38,il,attendre,present,attende,attend,Incorrecto
+2023-11-04 11:07:57,vous,decouvrir,present,decouvez,découvrez,Incorrecto
+2023-11-04 11:08:07,il,avoir,present,a,a,Correcto
