@@ -15,13 +15,14 @@ class ErrorLogger:
         if not os.path.exists(self.log_file):
             with open(self.log_file, mode='w', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow(['Fecha', 'Pronombre', 'Verbo', 'Tiempo Verbal', 'Conjugación Usuario', 'Conjugación Correcta', 'Resultado'])
+                writer.writerow(['Date','User', 'Pronom', 'Verbe', 'Temps Verbal', 'Conjugaison Utilisateur', 'Conjugaison Correcte', 'Résultat'])
 
-    def log_error(self, pronoun, verb, tense, user_conjugation, correct_conjugation, result):
+    def log_error(self, user_name, pronoun, verb, tense, user_conjugation, correct_conjugation, result):
+
         date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open(self.log_file, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([date_time, pronoun, verb, tense, user_conjugation, correct_conjugation, result])
+            writer.writerow([date_time, user_name, pronoun, verb, tense, user_conjugation, correct_conjugation, result])
 
 # Uso del logger
 # logger = ErrorLogger("202311")  # Crea el logger para el mes actual en un archivo 'YYYYMM.csv'

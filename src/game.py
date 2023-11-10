@@ -7,7 +7,15 @@ class ConjugationGame:
         self.conjugator = Conjugator()
         self.logger = ErrorLogger("2023-11")  # Create an ErrorLogger object for the current month
         self.score = {'correct': 0, 'incorrect': 0}
-
+        
+        while True:
+                first_name = input("Entrez votre prénom : ")
+                if ' ' not in first_name:
+                    self.user_name = first_name.lower()
+                    break
+                else:
+                    print("Veuillez entrer seulement votre prénom.")
+                
     def play_round(self):
         # Generate a random verb and prompt user input
         verb, pronoun, tense = self.conjugator.generate_random_verb()
@@ -37,7 +45,7 @@ class ConjugationGame:
             self.score['incorrect'] += 1
             result = 'Incorrect'
 
-        self.logger.log_error(pronoun, verb, tense, user_verb, correct_conjugation, result)
+        self.logger.log_error(self.user_name,pronoun, verb, tense, user_verb, correct_conjugation, result)
 
     def start_game(self):
         print("Bienvenue au jeu de conjugaison des verbes !")
