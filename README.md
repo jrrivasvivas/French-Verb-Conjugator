@@ -25,7 +25,7 @@ Welcome to the Conjugation Game, a Python-based interactive application designed
 To play the Conjugation Game, follow these steps:
 
 1. Clone the repository:
-git clone https://github.com/jrrivasvivas/conjugation-game.git
+git clone [https://github.com/jrrivasvivas/conjugation-game.git](https://github.com/jrrivasvivas/French-Verb-Conjugator.git)
 
 2. Navigate to the project directory:
 cd conjugation-game
