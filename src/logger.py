@@ -1,7 +1,6 @@
 import csv
 import os
 from datetime import datetime
-
 class ErrorLogger:
     def __init__(self, month_year):
         self.month_year = month_year
@@ -15,10 +14,9 @@ class ErrorLogger:
         if not os.path.exists(self.log_file):
             with open(self.log_file, mode='w', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow(['Date','User', 'Pronom', 'Verbe', 'Temps Verbal', 'Conjugaison Utilisateur', 'Conjugaison Correcte', 'Résultat'])
+                writer.writerow(['Date', 'User', 'Pronom', 'Verbe', 'Temps Verbal', 'Conjugaison Utilisateur', 'Conjugaison Correcte', 'Résultat'])
 
     def log_error(self, user_name, pronoun, verb, tense, user_conjugation, correct_conjugation, result):
-
         date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open(self.log_file, mode='a', newline='') as file:
             writer = csv.writer(file)

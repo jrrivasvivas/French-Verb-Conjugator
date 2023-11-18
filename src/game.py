@@ -1,35 +1,33 @@
-from src.verbs import Conjugator  # Importar Conjugator desde verbs.py en la carpeta src
-from src.logger import ErrorLogger  # Importar ErrorLogger desde logger.py en la carpeta src
+from src.verbs import Conjugator
+from src.logger import ErrorLogger
 
 class ConjugationGame:
-    def __init__(self):
-        # Initialize Conjugator and ErrorLogger objects
+    def __init__(self, user_name=None):
         self.conjugator = Conjugator()
-        self.logger = ErrorLogger("2023-11")  # Create an ErrorLogger object for the current month
+        self.logger = ErrorLogger("2023-11")
         self.score = {'correct': 0, 'incorrect': 0}
-        
-        while True:
-                first_name = input("Entrez votre prénom : ")
-                if ' ' not in first_name:
-                    self.user_name = first_name.lower()
-                    break
-                else:
-                    print("Veuillez entrer seulement votre prénom.")
-                
-    def play_round(self):
-        # Generate a random verb and prompt user input
+        self.user_name = user_name
+
+        if self.user_name is None:
+            self._get_user_name()
+
+    def _get_user_name(self):
+        # No se requiere la entrada de usuario aquí, ya que se obtiene desde la interfaz web en la aplicación Dash
+        pass
+
+    def play_round(self, user_input=None):
         verb, pronoun, tense = self.conjugator.generate_random_verb()
-        print(f"Conjuguez le verbe '{verb}' à '{pronoun}' au '{tense}'.")
 
-        user_input = input("Entrez la conjugaison (pronom verbe) : ")
+        if user_input is None:
+            # La entrada de usuario no se proporciona, asumimos el modo de consola
+            print(f"Conjuguez le verbe '{verb}' à '{pronoun}' au '{tense}'.")
+            user_input = input("Entrez la conjugaison (pronom verbe) : ")
 
-        # Split the input into words
         words = user_input.split()
 
-        # Verify if there are enough words (at least two) in the input
         if len(words) >= 2:
-            user_pronoun = words[0]  # The first word is the pronoun
-            user_verb = ' '.join(words[1:])  # The rest of the words are the verb (even if it contains spaces)
+            user_pronoun = words[0]
+            user_verb = ' '.join(words[1:])
         else:
             print("Entrée invalide. Doit inclure au moins un pronom et un verbe.")
             return
@@ -45,14 +43,7 @@ class ConjugationGame:
             self.score['incorrect'] += 1
             result = 'Incorrect'
 
-        self.logger.log_error(self.user_name,pronoun, verb, tense, user_verb, correct_conjugation, result)
+        self.logger.log_error(self.user_name, pronoun, verb, tense, user_verb, correct_conjugation, result)
 
-    def start_game(self):
-        print("Bienvenue au jeu de conjugaison des verbes !")
-        while True:
-            self.play_round()
-            print(f"Réussites : {self.score['correct']} - Erreurs : {self.score['incorrect']}")
-            play_again = input("Voulez-vous jouer à nouveau ? (o/n) : ").lower()
-            if play_again != 'o':
-                print("Merci d'avoir joué ! Au revoir.")
-                break
+    def get_score(self):
+        return f"Réussites : {self.score['correct']} - Erreurs : {self.score['incorrect']}"
