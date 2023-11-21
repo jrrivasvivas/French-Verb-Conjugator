@@ -1,8 +1,8 @@
 import dash
 from dash import dcc, html, callback, Input, Output, State
 from src.game.game_logic import ConjugationGameLogic
-from src.player import Player
-from src.logger import ErrorLogger
+from src.game.player import Player
+from src.logging.logger import ErrorLogger
 
 app = dash.Dash(__name__)
 

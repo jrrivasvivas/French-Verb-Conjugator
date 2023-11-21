@@ -1,7 +1,7 @@
 import random
-from .verbs import Conjugator
+from ..verbs.verbs import Conjugator
+from ..logging.logger import ErrorLogger
 from .player import Player
-from .logger import ErrorLogger
 
 class ConjugationGameLogic:
     def __init__(self, players, error_logger):
