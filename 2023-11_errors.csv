@@ -1,1 +1,5 @@
 Timestamp,User,Pronoun,Verb,Tense,User_Input,Correct_Conjugation,Result
+2023-11-24 13:20:25,jose,elles,sortir,passe_compose,bois,sont sorties,Incorrect. La conjugaison correcte est : elles sont sorties
+2023-11-24 13:20:42,jose,ils,grandir,passe_compose,bois,ont grandi,Incorrect. La conjugaison correcte est : ils ont grandi
+2023-11-24 13:21:10,jose,elles,prendre,present,ont grandi,prennent,Incorrect. La conjugaison correcte est : elles prennent
+2023-11-24 13:21:30,jose,tu,decouvrir,passe_compose,prennent,as découvert,Incorrect. La conjugaison correcte est : tu as découvert
