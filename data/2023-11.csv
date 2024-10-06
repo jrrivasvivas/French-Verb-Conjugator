@@ -196,3 +196,15 @@ Fecha;User;Pronombre;Verbo;Tiempo Verbal;Conjugación Usuario;Conjugación Correct
 2023-12-01 14:50:39,jose,il,pouvoir,present,peut,peut,Correct
 2023-12-01 14:50:55,jose,vous,decouvrir,present,découvert,découvrez,Incorrect
 2023-12-01 14:51:27,jose,vous,decouvrir,present,découvrez,découvrez,Correct
+2024-10-05 18:19:27,jose,tu,faire,present,fais,fais,Correct
+2024-10-05 18:21:40,jose,vous,faire,present,faites,faites,Correct
+2024-10-05 18:21:55,jose,tu,dire,present,dis,dis,Correct
+2024-10-05 18:22:18,jose,tu,croire,present,crois,crois,Correct
+2024-10-05 18:22:30,jose,nous,savoir,present,savons,savons,Correct
+2024-10-05 18:22:38,jose,tu,avoir,present,as,as,Correct
+2024-10-05 18:22:43,jose,je,aller,present,vais,vais,Correct
+2024-10-05 18:22:52,jose,il,voir,present,voit,voit,Correct
+2024-10-05 18:23:04,jose,je,s'appeler,present,me appele,m'appelle,Incorrect
+2024-10-05 18:23:21,jose,il,etre,present,est,est,Correct
+2024-10-05 18:28:05,jose,nous,dormir,present,dormons,dormons,Correct
+2024-10-05 18:28:17,jose,tu,recevoir,present,recu,reÃ§ois,Incorrect
