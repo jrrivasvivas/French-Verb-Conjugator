@@ -208,3 +208,5 @@ Fecha;User;Pronombre;Verbo;Tiempo Verbal;ConjugaciÛn Usuario;ConjugaciÛn Correct
 2024-10-05 18:23:21,jose,il,etre,present,est,est,Correct
 2024-10-05 18:28:05,jose,nous,dormir,present,dormons,dormons,Correct
 2024-10-05 18:28:17,jose,tu,recevoir,present,recu,re√ßois,Incorrect
+2024-10-05 21:09:01,jose,il,recevoir,present,re√ßoit,re√ßoit,Correct
+2024-10-05 21:49:11,jose,vous,se battre,imparfait,vous battiez,vous battiez,Correct
