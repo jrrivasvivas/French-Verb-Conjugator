@@ -210,3 +210,21 @@ Fecha;User;Pronombre;Verbo;Tiempo Verbal;Conjugaci�n Usuario;Conjugaci�n Correct
 2024-10-05 18:28:17,jose,tu,recevoir,present,recu,reçois,Incorrect
 2024-10-05 21:09:01,jose,il,recevoir,present,reçoit,reçoit,Correct
 2024-10-05 21:49:11,jose,vous,se battre,imparfait,vous battiez,vous battiez,Correct
+2024-10-06 09:02:52,jose,je,picoter,imparfait,picote,picotais,Incorrect
+2024-10-06 13:05:47,jose,nous,dormir,imparfait,dormions,dormions,Correct
+2024-10-06 14:22:42,jose,vous,voir,imparfait,voyiez,voyiez,Correct
+2024-10-06 14:22:53,jose,il,neiger,imparfait,niege,neigeait,Incorrect
+2024-10-06 15:32:04,jose,je,vouloir,imparfait,voulais,voulais,Correct
+2024-10-06 15:32:56,jose,vous,s’améliorer,imparfait,vous améliriez,vous amélioriez,Incorrect
+2024-10-06 15:33:48,jose,vous,envoyer,imparfait,envoyiez,envoyiez,Correct
+2024-10-06 15:34:00,jose,tu,gagner,imparfait,ganeas,gagnais,Incorrect
+2024-10-06 15:34:35,jose,vous,venir,imparfait,veniez,veniez,Correct
+2024-10-06 15:37:26,jose,tu,suivre,present,suivrait,suis,Incorrect
+2024-10-06 15:44:15,jose,vous,produire,present,produirez,produisez,Incorrect
+2024-10-06 15:45:51,jose,il,ecrire,present,ecrire,écrit,Incorrect
+2024-10-06 15:46:14,jose,vous,finir,present,finissez,finissez,Correct
+2024-10-15 09:27:18,jose,vous,etre,imparfait,soiyez,étiez,Incorrect
+2024-10-15 09:28:06,jose,nous,etre,imparfait,etions,étions,Incorrect
+2024-10-15 09:28:22,jose,tu,avoir,present,as,as,Correct
+2024-10-15 09:29:06,jose,que nous,etre,subjonctif,soyons,soyons,Incorrect
+2024-10-15 09:30:59,jose,je,avoir,futur_simple,aurais,aurai,Incorrect

@@ -1,0 +1,568 @@
+
+Tengo un proyecto en python que esta estructurado de la siguiente forma
+
+data
+src
+    game.py
+    logger.py 
+    verbs.py
+main.py
+
+
+se corre en la consola y se ve algo asi:
+(french) jose@FRANK:/mnt/x/python/French-Verb-Conjugator$ python main.py
+Entrez votre prénom : jose
+
+Sélectionnez les temps verbaux avec la barre d'espace et appuyez sur 'Enter' pour valider :
+
+[ ] Présent
+[X] Passé Compossé
+[ ] Futur Simple
+[ ] Imparfait
+[ ] Subjonctif Present
+[ ] Conditionnel Present
+
+Bienvenue au jeu de conjugaison des verbes !
+Conjuguez le verbe 'avoir' à 'tu' au 'passe_composse'.
+Entrez la conjugaison (pronom verbe) : tu as
+Incorrect. La conjugaison correcte est : tu as eu
+Réussites : 0 - Erreurs : 1
+Voulez-vous jouer à nouveau ? (o/n) : o
+Conjuguez le verbe 'aller' à 'nous' au 'passe_composse'.
+Entrez la conjugaison (pronom verbe) : nous avons allé
+Incorrect. La conjugaison correcte est : nous sommes allés
+Réussites : 0 - Erreurs : 2
+
+Aqui los archivos y su codigo
+
+game.py:
+from blessed import Terminal
+
+from src.verbs import Conjugator  # Importar Conjugator desde verbs.py en la carpeta src
+from src.logger import ErrorLogger  # Importar ErrorLogger desde logger.py en la carpeta src
+
+class ConjugationGame:
+    def __init__(self):
+        # Inicializar Conjugator y ErrorLogger
+        self.conjugator = Conjugator()
+        self.logger = ErrorLogger("2024-11")  # Crear un ErrorLogger para el mes actual
+        self.score = {'correct': 0, 'incorrect': 0}
+        self.tenses_selected = []  # Aquí se almacenan los tiempos verbales seleccionados
+        self.term = Terminal()  # Crear un objeto terminal
+
+        # Pedir nombre del jugador
+        while True:
+            first_name = input("Entrez votre prénom : ")
+            if ' ' not in first_name:
+                self.user_name = first_name.lower()
+                break
+            else:
+                print("Veuillez entrer seulement votre prénom.")
+
+    def menu_selection_temps(self):
+        # Opciones del menú
+        tenses = ['Présent', 'Passé Compossé', 'Futur Simple', 'Imparfait', 'Subjonctif Present','Conditionnel Present']
+        selected = [False] * len(tenses)
+
+        # Inicializamos el terminal
+        with self.term.fullscreen(), self.term.cbreak(), self.term.hidden_cursor():
+            print(self.term.clear())
+            print(self.term.move(0, 0) + "Sélectionnez les temps verbaux avec la barre d'espace et appuyez sur 'Enter' pour valider :\n")
+            
+            current_row = 0
+
+            while True:
+                # Limpiar la pantalla para evitar duplicaciones
+                print(self.term.clear())
+
+                # Mostrar el mensaje de selección
+                print(self.term.move(0, 0) + "Sélectionnez les temps verbaux avec la barre d'espace et appuyez sur 'Enter' pour valider :\n")
+
+                # Mostrar las opciones del menú con sus estados de selección
+                for idx, tense in enumerate(tenses):
+                    if idx == current_row:
+                        if selected[idx]:
+                            print(self.term.reverse("[X] " + tense))
+                        else:
+                            print(self.term.reverse("[ ] " + tense))
+                    else:
+                        if selected[idx]:
+                            print("[X] " + tense)
+                        else:
+                            print("[ ] " + tense)
+
+                key = self.term.inkey()
+
+                if key.code in (self.term.KEY_UP, 'k'):  # Mover hacia arriba
+                    current_row = (current_row - 1) % len(tenses)
+                elif key.code in (self.term.KEY_DOWN, 'j'):  # Mover hacia abajo
+                    current_row = (current_row + 1) % len(tenses)
+                elif key == ' ':  # Seleccionar/deseleccionar con la barra espaciadora
+                    selected[current_row] = not selected[current_row]
+                elif key.code in (self.term.KEY_ENTER, '\n', '\r'):  # Enter para confirmar
+                    break
+
+        # Mapeo de nombres de tiempos verbales a los utilizados en verb_dict
+        tense_mapping = {
+            'Présent': 'present',
+            'Passé Compossé': 'passe_composse',
+            'Futur Simple': 'futur_simple',
+            'Imparfait': 'imparfait',
+            'Subjonctif Present': 'subjonctif',
+            'Conditionnel Present': 'conditionnel_present'
+        }
+
+        # Guardar los tiempos verbales seleccionados con el mapeo correcto
+        self.tenses_selected = [tense_mapping[tense] for idx, tense in enumerate(tenses) if selected[idx]]
+        
+        # Si no se seleccionó ningún tiempo, por defecto será 'present'
+        if not self.tenses_selected:
+            print("Aucun temps verbal sélectionné, vous allez pratiquer le 'Présent'.")
+            self.tenses_selected = ['present']  
+
+    def play_round(self):
+        # Generar un verbo aleatorio de los tiempos seleccionados
+        verb, pronoun, tense = self.conjugator.generate_random_verb(self.tenses_selected)
+        print(f"Conjuguez le verbe '{verb}' à '{pronoun}' au '{tense}'.")
+
+        user_input = input("Entrez la conjugaison (pronom verbe) : ")
+
+        # Separar el input en palabras
+        words = user_input.split()
+
+        if len(words) >= 2:
+            user_pronoun = words[0]
+            user_verb = ' '.join(words[1:])
+        else:
+            print("Entrée invalide. Doit inclure au moins un pronom et un verbe.")
+            return
+
+        correct_conjugation = self.conjugator.conjugate(verb, pronoun, tense)
+
+        if user_verb == correct_conjugation and user_pronoun == pronoun:
+            print("Correct !")
+            self.score['correct'] += 1
+            result = 'Correct'
+        else:
+            print(f"Incorrect. La conjugaison correcte est : {pronoun} {correct_conjugation}")
+            self.score['incorrect'] += 1
+            result = 'Incorrect'
+
+        self.logger.log_error(self.user_name, pronoun, verb, tense, user_verb, correct_conjugation, result)
+
+    def start_game(self):
+        print("Bienvenue au jeu de conjugaison des verbes !")
+
+        # Mostrar el menú para seleccionar los tiempos verbales
+        self.menu_selection_temps()
+
+        while True:
+            self.play_round()
+            print(f"Réussites : {self.score['correct']} - Erreurs : {self.score['incorrect']}")
+            play_again = input("Voulez-vous jouer à nouveau ? (o/n) : ").lower()
+            if play_again != 'o':
+                print("Merci d'avoir joué ! Au revoir.")
+                break
+
+
+logger.py:
+import csv
+import os
+from datetime import datetime
+
+class ErrorLogger:
+    def __init__(self, month_year):
+        self.month_year = month_year
+        self.log_file = f"data/{month_year}.csv"  # Ruta para el archivo CSV en formato 'YYYYMM.csv'
+        self._create_log_file()
+
+    def _create_log_file(self):
+        if not os.path.exists("data"):  # Utiliza la carpeta data/
+            os.makedirs("data")
+
+        if not os.path.exists(self.log_file):
+            with open(self.log_file, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['Date','User', 'Pronom', 'Verbe', 'Temps Verbal', 'Conjugaison Utilisateur', 'Conjugaison Correcte', 'Résultat'])
+
+    def log_error(self, user_name, pronoun, verb, tense, user_conjugation, correct_conjugation, result):
+
+        date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open(self.log_file, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([date_time, user_name, pronoun, verb, tense, user_conjugation, correct_conjugation, result])
+
+# Uso del logger
+# logger = ErrorLogger("202311")  # Crea el logger para el mes actual en un archivo 'YYYYMM.csv'
+# logger.log_error(pronoun, verb, tense, user_conjugation, correct_conjugation, result)  # Registra un error en el CSV
+
+verbs.py:
+import random
+
+class Conjugator:
+    
+    verb_dict = {
+        "etre": {
+            "present": {
+                "je": "suis",
+                "tu": "es",
+                "il": "est",
+                "nous": "sommes",
+                "vous": "êtes"
+            },
+            "passe_composse": {
+                "je": "ai été",
+                "tu": "as été",
+                "il": "a été",
+                "nous": "avons été",
+                "vous": "avez été"
+            },
+            "futur_simple": {
+                "je": "serai",
+                "tu": "seras",
+                "il": "sera",
+                "nous": "serons",
+                "vous": "serez"
+            },
+            "imparfait": {
+                "je": "étais",
+                "tu": "étais",
+                "il": "était",
+                "nous": "étions",
+                "vous": "étiez"
+            },
+            "subjonctif": {
+                "que je": "sois",
+                "que tu": "sois",
+                "qu'il": "soit",
+                "que nous": "soyons",
+                "que vous": "soyez"
+            },
+            "conditionnel_present": {
+                "je": "serais",
+                "tu": "serais",
+                "il": "serait",
+                "nous": "serions",
+                "vous": "seriez"
+            }
+        },
+        "avoir": {
+            "present": {
+                "je": "ai",
+                "tu": "as",
+                "il": "a",
+                "nous": "avons",
+                "vous": "avez"
+            },
+            "passe_composse": {
+                "je": "ai eu",
+                "tu": "as eu",
+                "il": "a eu",
+                "nous": "avons eu",
+                "vous": "avez eu"
+            },
+            "futur_simple": {
+                "je": "aurai",
+                "tu": "auras",
+                "il": "aura",
+                "nous": "aurons",
+                "vous": "aurez"
+            },
+            "imparfait": {
+                "je": "avais",
+                "tu": "avais",
+                "il": "avait",
+                "nous": "avions",
+                "vous": "aviez"
+            },
+            "subjonctif": {
+                "que je": "aie",
+                "que tu": "aies",
+                "qu'il": "ait",
+                "que nous": "ayons",
+                "que vous": "ayez"
+            },
+            "conditionnel_present": {
+                "je": "aurais",
+                "tu": "aurais",
+                "il": "aurait",
+                "nous": "aurions",
+                "vous": "auriez"
+            }
+        },
+        "aller": {
+            "present": {
+                "je": "vais",
+                "tu": "vas",
+                "il": "va",
+                "nous": "allons",
+                "vous": "allez"
+            },
+            "passe_composse": {
+                "je": "suis allé",
+                "tu": "es allé",
+                "il": "est allé",
+                "nous": "sommes allés",
+                "vous": "êtes allés"
+            },
+            "futur_simple": {
+                "je": "irai",
+                "tu": "iras",
+                "il": "ira",
+                "nous": "irons",
+                "vous": "irez"
+            },
+            "imparfait": {
+                "je": "allais",
+                "tu": "allais",
+                "il": "allait",
+                "nous": "allions",
+                "vous": "alliez"
+            },
+            "subjonctif": {
+                "que je": "aille",
+                "que tu": "ailles",
+                "qu'il": "aille",
+                "que nous": "allions",
+                "que vous": "alliez"
+            },
+            "conditionnel_present": {
+                "je": "irais",
+                "tu": "irais",
+                "il": "irait",
+                "nous": "irions",
+                "vous": "iriez"
+            }
+        }
+    }
+
+
+
+    @staticmethod
+    def conjugate(verb, pronoun, tense):
+        try:
+            return Conjugator.verb_dict[verb][tense][pronoun]
+        except KeyError:
+            return None
+
+    @staticmethod
+    def generate_random_verb(selected_tenses):
+        # Filtrar los verbos que tienen los tiempos seleccionados
+        verbs_with_selected_tenses = {
+            verb: {tense: conjugations for tense, conjugations in tenses.items() if tense in selected_tenses}
+            for verb, tenses in Conjugator.verb_dict.items()
+            if any(tense in selected_tenses for tense in tenses.keys())
+        }
+
+        # Asegurarse de que haya verbos con tiempos seleccionados
+        if not verbs_with_selected_tenses:
+            raise ValueError("No hay verbos disponibles con los tiempos seleccionados.")
+
+        # Elegir un verbo al azar que tenga tiempos seleccionados
+        verb = random.choice(list(verbs_with_selected_tenses.keys()))
+
+        # Elegir un tiempo que esté entre los seleccionados
+        tense = random.choice(list(verbs_with_selected_tenses[verb].keys()))
+
+        # Elegir un pronombre al azar
+        pronoun = random.choice(list(verbs_with_selected_tenses[verb][tense].keys()))
+
+        return verb, pronoun, tense
+
+main.py:
+from src.game import ConjugationGame
+
+if __name__ == "__main__":
+    game = ConjugationGame()
+    game.start_game()
+
+
+si quisiera que este mismo proceso se vea en una pagina web, que me recomiendas, actualmente la consola permite manipular todo el proceso con el teclado, me gustaria esa facilida se mantenga al pasar este proyecto a una pagina web, yo se programar en python unicamente, estuve viendo flask, streamlit, pero realmente me gustaria que se mantuviera la facilida un continuo con el teclado, doy respuesta, enter y va a la siguiente, que use el mouse pero que sea solo para el inicio, pero si quiero practicar y practicar mantener todo el proceso con teclado
+
+que me recomiendas?
+y como puedo estructurar el proyecto.
+
+eres libre de proponer la opcion acorde sin importar si es algo que no domino, php, JS, pero entiendo hay frameworks que facilitan hacer algo desde cero, pero tomando el cuenta como esa el proyecto y que deseo que siempre se pueda usar el teclado me gustaria saber al para simplemente entender a donde debo ir para empezar a pasarlo y ya que sea web, luego tendre que pensar en alguna forma de darle seguridad de manera de evitar si alguien hace un boot y simplemente colapsa el cpu donde este alojada esa pagina pero ya eso es una fase 2 del proyecto, pero bueno hoy es fase 1 solo ten en cuenta la fase 2 que es como mi vision
+
+ayudame con las contracciones, 
+
+modifica el siguiente diccionario, por ejemplo:
+
+"je": "j'ai eu"
+
+que cuando exista una contraccion, toda la respuesta incluso el pronombre debe estar del lado derecho
+
+
+
+import random
+
+class Conjugator:
+    
+    verb_dict = {
+        "etre": {
+            "present": {
+                "je": "suis",
+                "tu": "es",
+                "il": "est",
+                "nous": "sommes",
+                "vous": "êtes"
+            },
+            "passe_composse": {
+                "je": "ai été",
+                "tu": "as été",
+                "il": "a été",
+                "nous": "avons été",
+                "vous": "avez été"
+            },
+            "futur_simple": {
+                "je": "serai",
+                "tu": "seras",
+                "il": "sera",
+                "nous": "serons",
+                "vous": "serez"
+            },
+            "imparfait": {
+                "je": "étais",
+                "tu": "étais",
+                "il": "était",
+                "nous": "étions",
+                "vous": "étiez"
+            },
+            "subjonctif": {
+                "que je": "sois",
+                "que tu": "sois",
+                "qu'il": "soit",
+                "que nous": "soyons",
+                "que vous": "soyez"
+            },
+            "conditionnel_present": {
+                "je": "serais",
+                "tu": "serais",
+                "il": "serait",
+                "nous": "serions",
+                "vous": "seriez"
+            }
+        },
+        "avoir": {
+            "present": {
+                "je": "ai",
+                "tu": "as",
+                "il": "a",
+                "nous": "avons",
+                "vous": "avez"
+            },
+            "passe_composse": {
+                "je": "ai eu",
+                "tu": "as eu",
+                "il": "a eu",
+                "nous": "avons eu",
+                "vous": "avez eu"
+            },
+            "futur_simple": {
+                "je": "aurai",
+                "tu": "auras",
+                "il": "aura",
+                "nous": "aurons",
+                "vous": "aurez"
+            },
+            "imparfait": {
+                "je": "avais",
+                "tu": "avais",
+                "il": "avait",
+                "nous": "avions",
+                "vous": "aviez"
+            },
+            "subjonctif": {
+                "que je": "aie",
+                "que tu": "aies",
+                "qu'il": "ait",
+                "que nous": "ayons",
+                "que vous": "ayez"
+            },
+            "conditionnel_present": {
+                "je": "aurais",
+                "tu": "aurais",
+                "il": "aurait",
+                "nous": "aurions",
+                "vous": "auriez"
+            }
+        },
+        "aller": {
+            "present": {
+                "je": "vais",
+                "tu": "vas",
+                "il": "va",
+                "nous": "allons",
+                "vous": "allez"
+            },
+            "passe_composse": {
+                "je": "suis allé",
+                "tu": "es allé",
+                "il": "est allé",
+                "nous": "sommes allés",
+                "vous": "êtes allés"
+            },
+            "futur_simple": {
+                "je": "irai",
+                "tu": "iras",
+                "il": "ira",
+                "nous": "irons",
+                "vous": "irez"
+            },
+            "imparfait": {
+                "je": "allais",
+                "tu": "allais",
+                "il": "allait",
+                "nous": "allions",
+                "vous": "alliez"
+            },
+            "subjonctif": {
+                "que je": "aille",
+                "que tu": "ailles",
+                "qu'il": "aille",
+                "que nous": "allions",
+                "que vous": "alliez"
+            },
+            "conditionnel_present": {
+                "je": "irais",
+                "tu": "irais",
+                "il": "irait",
+                "nous": "irions",
+                "vous": "iriez"
+            }
+        }
+    }
+
+
+
+    @staticmethod
+    def conjugate(verb, pronoun, tense):
+        try:
+            return Conjugator.verb_dict[verb][tense][pronoun]
+        except KeyError:
+            return None
+
+    @staticmethod
+    def generate_random_verb(selected_tenses):
+        # Filtrar los verbos que tienen los tiempos seleccionados
+        verbs_with_selected_tenses = {
+            verb: {tense: conjugations for tense, conjugations in tenses.items() if tense in selected_tenses}
+            for verb, tenses in Conjugator.verb_dict.items()
+            if any(tense in selected_tenses for tense in tenses.keys())
+        }
+
+        # Asegurarse de que haya verbos con tiempos seleccionados
+        if not verbs_with_selected_tenses:
+            raise ValueError("No hay verbos disponibles con los tiempos seleccionados.")
+
+        # Elegir un verbo al azar que tenga tiempos seleccionados
+        verb = random.choice(list(verbs_with_selected_tenses.keys()))
+
+        # Elegir un tiempo que esté entre los seleccionados
+        tense = random.choice(list(verbs_with_selected_tenses[verb].keys()))
+
+        # Elegir un pronombre al azar
+        pronoun = random.choice(list(verbs_with_selected_tenses[verb][tense].keys()))
+
+        return verb, pronoun, tense
+

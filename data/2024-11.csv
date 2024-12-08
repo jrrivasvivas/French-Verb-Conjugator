@@ -1,0 +1,13 @@
+Date,User,Pronom,Verbe,Temps Verbal,Conjugaison Utilisateur,Conjugaison Correcte,Résultat
+2024-11-15 10:43:46,jose,il,etre,conditionnel_present,serais,serait,Incorrect
+2024-11-16 14:02:29,jose,nous,avoir,passe,avons,avons eu,Incorrect
+2024-11-16 14:03:12,jose,il,etre,passe,a été,a été,Correct
+2024-11-16 14:03:46,jose,il,aller,passe,est passé,est allé,Incorrect
+2024-11-16 14:11:42,jose,tu,avoir,passe_composse,as,as eu,Incorrect
+2024-11-16 14:12:18,jose,nous,aller,passe_composse,avons allé,sommes allés,Incorrect
+2024-11-16 14:13:08,jose,je,avoir,passe_composse,eu,ai eu,Incorrect
+2024-11-19 10:48:48,jose,je,avoir,passe_composse,eu,j'ai eu,Incorrect
+2024-11-19 11:53:31,jose,tu,avoir,passe_composse,tu as,as eu,Incorrect
+2024-11-19 11:53:43,jose,nous,avoir,passe_composse,nous avons,avons eu,Incorrect
+2024-11-19 11:54:09,jose,tu,etre,passe_composse,tu as été,as été,Correct
+2024-11-19 11:54:23,jose,nous,avoir,passe_composse,nous avons eu,avons eu,Correct
